@@ -1,0 +1,33 @@
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Local recordings and browser exports
+recordings/
+downloads/
+*.webm
+*.mp4
+*.mov
+*.mkv
+*.wav
+*.png
+
+# Editor and operating-system files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+coverage/
+dist/
+build/

@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <title>Screen Recorder Studio — Capture Your Screen</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Screen Recorder Studio home"><span class="brand-mark">◉</span><span>Screen Recorder <b>Studio</b></span></a>
+    <div class="top-actions">
+      <span id="supportStatus" class="status-pill"><span class="dot"></span> Checking support…</span>
+      <button class="icon-button" id="libraryButton" title="Open recording library" aria-label="Open recording library">▤</button>
+      <button class="icon-button" id="settingsButton" title="Open settings" aria-label="Open settings">⚙</button>
+    </div>
+  </header>
+
+  <main class="app-shell">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">LOCAL RECORDING STUDIO</p>
+        <h1>Capture your screen.<br><em>Share your ideas.</em></h1>
+        <p class="lede">Record your screen, microphone, and camera locally with a focused, privacy-first workspace.</p>
+      </div>
+      <div class="hero-stats"><span id="resolutionBadge">1280 × 720</span><span id="fpsBadge">30 FPS</span><span>Local only</span></div>
+    </section>
+
+    <section class="studio-grid">
+      <div class="stage-wrap">
+        <div class="stage" id="stage">
+          <video id="screenPreview" class="screen-preview" autoplay muted playsinline></video>
+          <div class="empty-state" id="emptyState">
+            <div class="capture-icon">▣</div>
+            <h2>Ready when you are</h2>
+            <p>Select a screen or window to begin your recording session.</p>
+            <button class="primary-button large" id="selectScreenButton">Select screen <span>↗</span></button>
+            <small>Tip: press <kbd>Alt</kbd> + <kbd>R</kbd> to start or stop</small>
+          </div>
+          <div class="stage-overlay"><span id="stageState">No source selected</span><span id="stageTimer">00:00</span></div>
+          <video id="cameraPreview" class="camera-preview is-hidden" autoplay muted playsinline></video>
+          <button class="camera-close is-hidden" id="cameraClose" aria-label="Disable webcam">×</button>
+        </div>
+        <div class="recording-banner is-hidden" id="recordingBanner"><span class="pulse"></span><strong id="recordingLabel">Recording</strong><span id="recordingTimer">00:00</span></div>
+      </div>
+
+      <aside class="control-panel">
+        <div class="panel-heading"><h2>Session controls</h2><span class="shortcut-hint">⌘ / ?</span></div>
+        <div class="control-row primary-controls">
+          <button class="primary-button" id="startButton" disabled><span class="record-dot"></span> Start recording</button>
+          <button class="secondary-button" id="pauseButton" disabled>Ⅱ Pause</button>
+          <button class="danger-button" id="stopButton" disabled>■ Stop</button>
+        </div>
+        <div class="divider"></div>
+        <div class="toggle-list">
+          <div class="toggle-item"><span class="control-icon">♩</span><div><strong>Microphone</strong><small id="micStatus">Not connected</small></div><button class="toggle" id="micButton" aria-label="Toggle microphone"><span></span></button></div>
+          <div class="toggle-item"><span class="control-icon">◉</span><div><strong>Webcam</strong><small id="cameraStatus">Off</small></div><button class="toggle" id="cameraButton" aria-label="Toggle webcam"><span></span></button></div>
+        </div>
+        <div class="volume-row"><label for="micVolume">Mic volume</label><input id="micVolume" type="range" min="0" max="2" step=".05" value="1"><output id="micVolumeValue">100%</output></div>
+        <div class="volume-row"><label for="systemVolume">System audio</label><input id="systemVolume" type="range" min="0" max="2" step=".05" value="1"><output id="systemVolumeValue">100%</output></div>
+        <div class="meter"><span>Audio level</span><div class="meter-track"><i id="audioMeter"></i></div></div>
+        <button class="outline-button" id="settingsShortcut">⚙ Recording settings</button>
+        <p class="privacy-note">⌁ Your media stays on this device. Nothing is uploaded.</p>
+      </aside>
+    </section>
+
+    <section class="tips"><div><strong>Quick shortcuts</strong><span><kbd>Alt</kbd> <kbd>R</kbd> Record</span><span><kbd>Alt</kbd> <kbd>P</kbd> Pause</span><span><kbd>Alt</kbd> <kbd>M</kbd> Mic</span><span><kbd>Alt</kbd> <kbd>W</kbd> Webcam</span></div><button class="text-button" id="helpButton">How it works →</button></section>
+  </main>
+
+  <div class="toast-region" id="toastRegion" aria-live="polite"></div>
+
+  <dialog id="settingsDialog" class="modal"><form method="dialog" class="modal-card"><div class="modal-header"><div><p class="eyebrow">PREFERENCES</p><h2>Recording settings</h2></div><button class="close-button" value="cancel" aria-label="Close settings">×</button></div><div class="settings-grid"><label>Target resolution<select id="resolution"><option value="720">720p — 1280 × 720</option><option value="1080">1080p — 1920 × 1080</option><option value="2160">4K — 3840 × 2160</option></select></label><label>Frame rate<select id="frameRate"><option>24</option><option selected>30</option><option>60</option></select></label><label>Video bitrate<select id="bitrate"><option value="2">2 Mbps</option><option value="4" selected>4 Mbps</option><option value="8">8 Mbps</option><option value="12">12 Mbps</option><option value="20">20 Mbps</option></select></label><label class="check-label"><input id="echoCancellation" type="checkbox" checked> Echo cancellation</label><label class="check-label"><input id="noiseSuppression" type="checkbox" checked> Noise suppression</label></div><p class="form-help">Targets are applied where the browser supports them. Native screen capture dimensions depend on the selected source.</p><div class="modal-footer"><button class="secondary-button" value="cancel">Cancel</button><button class="primary-button" id="saveSettingsButton" value="default">Save preferences</button></div></form></dialog>
+
+  <dialog id="reviewDialog" class="modal"><div class="modal-card review-card"><div class="modal-header"><div><p class="eyebrow">RECORDING COMPLETE</p><h2>Review your capture</h2></div><button class="close-button" id="closeReview" aria-label="Close review">×</button></div><video id="reviewVideo" class="review-video" controls playsinline></video><div class="metadata"><span><b id="reviewDuration">00:00</b> Duration</span><span><b id="reviewSize">—</b> File size</span><span><b id="reviewFormat">—</b> Format</span></div><div class="modal-footer"><button class="secondary-button" id="snapshotButton">▧ Snapshot</button><button class="secondary-button" id="saveLibraryButton">▤ Save to library</button><button class="primary-button" id="downloadButton">↓ Download video</button></div></div></dialog>
+  <dialog id="renameDialog" class="modal"><form method="dialog" class="modal-card"><div class="modal-header"><div><p class="eyebrow">LIBRARY</p><h2>Rename recording</h2></div><button class="close-button" value="cancel" aria-label="Close rename dialog">×</button></div><label class="rename-label" for="renameInput">Recording title<input id="renameInput" maxlength="120" required></label><div class="modal-footer"><button class="secondary-button" value="cancel">Cancel</button><button class="primary-button" id="confirmRename" value="default">Save title</button></div></form></dialog>
+
+  <aside class="drawer" id="libraryDrawer" aria-label="Recording library"><div class="drawer-header"><div><p class="eyebrow">YOUR RECORDINGS</p><h2>Library <span id="libraryCount">0</span></h2></div><button class="close-button" id="closeLibrary" aria-label="Close library">×</button></div><div id="libraryList" class="library-list"></div></aside>
+  <div class="drawer-backdrop" id="drawerBackdrop"></div>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
